@@ -1,0 +1,36 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": ".",
+      "framework": "nextjs",
+      "installCommand": "npm ci --workspaces --include-workspace-root --include=dev",
+      "buildCommand": "npm run build:services",
+      "devCommand": "npm run dev:web",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "api",
+          "format": "url",
+          "env": "CICLOVALOR_API_URL"
+        }
+      ]
+    },
+    "api": {
+      "root": "apps/api",
+      "framework": "nestjs",
+      "entrypoint": "src/main.ts",
+      "installCommand": "npm ci --workspaces --include-workspace-root --include=dev",
+      "buildCommand": "npm run build --workspace @ciclovalor/api",
+      "devCommand": "npm run dev --workspace @ciclovalor/api"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
+  ]
+}
